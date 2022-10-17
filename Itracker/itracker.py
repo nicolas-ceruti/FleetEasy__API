@@ -13,28 +13,14 @@ import json
 app = Flask(__name__)
 
 mydb = mysql.connector.connect(
- host="localhost ",
+ host="localhost",
  port="3306",
  user="root",
  password="",
  database="mydb"
 )
 
-
-@app.route("/login", methods=["POST"])
-def login():
-  try:
-    data = request.get_json() 
-    sql=f"SELECT * FROM usuario WHERE email='{data['email']}' AND senha='{data['senha']}'"
-    mycursor = mydb.cursor()
-    mycursor.execute(sql)
-    usuarios = mycursor.fetchall()
-    if (usuarios) != nullcontext:
-      return (usuarios)
-    else:
-      return ("ff")
-  except Exception as ex:
-    return (error_error())
+#-----------------G E T --------------------------------
 
 @app.route("/getUsuarios", methods=["GET"])
 def getUsuarios():
@@ -80,7 +66,23 @@ def getColetas():
   except Exception as ex:
     return (error_error())
 
-#-------------------------------------------------
+#-----------------P O S T --------------------------------
+
+@app.route("/login", methods=["POST"])
+def login():
+  try:
+    data = request.get_json() 
+    sql=f"SELECT * FROM usuario WHERE email='{data['email']}' AND senha='{data['senha']}'"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    usuarios = mycursor.fetchall()
+    if (usuarios) != nullcontext:
+      return (usuarios)
+    else:
+      return ("ff")
+  except Exception as ex:
+    return (error_error())
+
 
 @app.route("/createUsuario", methods=["POST"])
 def createUsuario():
@@ -122,7 +124,7 @@ def createVeiculo():
     data = request.get_json
     return (error_error())
 
-@app.route("/createColeta", methods=["POST"])
+@app.route("/createColeta", methods=["POST"])  #BAD
 def createColeta():
   try:
     data = request.get_json()
@@ -138,6 +140,77 @@ def createColeta():
   except Exception as ex:
     data = request.get_json
     return (error_error())
+
+
+#-----------------P U T --------------------------------
+
+@app.route("/putUsuario", methods=["PUT"])
+def putUsuario():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE usuario SET "
+    sql = sql + f"email='{data['email']}', senha='{data['senha']}', nome='{data['nome']}' WHERE id={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    return ("Usuário Editado com Sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+
+@app.route("/putMotorista", methods=["PUT"])
+def putMotorista():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE motoristas SET "
+    sql = sql + f"nomeCompleto='{data['nomeCompleto']}', senha='{data['senha']}', email='{data['email']}', cpf='{data['cpf']}', rg='{data['rg']}'," 
+    sql = sql + f" telefone='{data['telefone']}', latitude='{data['latitude']}', longitude='{data['longitude']}', cnh='{data['cnh']}' WHERE id={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    return ("Motorista Editado com Sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+
+@app.route("/putCoordenadas", methods=["PUT"])
+def putCoordenadas():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE motoristas SET "
+    sql = sql + f" latitude='{data['latitude']}', longitude='{data['longitude']}' WHERE id={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    return ("Motorista Editado com Sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+
+@app.route("/putVeiculo", methods=["PUT"])
+def createVeiculo():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE veiculo SET  "
+    sql = sql + f"placa='{data['placa']}', cor='{data['cor']}', ano='{data['ano']}', marca='{data['marca']}', tipo='{data['tipo']}'," 
+    sql = sql + f" modelo='{data['modelo']}', chassi='{data['chassi']}', capacidadePeso='{data['capacidadePeso']}', capacidadeVolumetria='{data['capacidadeVolumetria']}' WHERE id={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    return ("Veículo Editado com Sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+
+
+@app.route("/update", methods=["PUT"])
+def update():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE usuarios SET nome='{data['nome']}', email='{data['email']}', senha='{data['senha']}', profissao='{data['profissao']}' WHERE id={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    return ("Usuário editado com sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+
 
 
 

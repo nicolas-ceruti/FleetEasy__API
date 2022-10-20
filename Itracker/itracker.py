@@ -198,6 +198,23 @@ def createVeiculo():
     return (error_error())
 
 
+@app.route("/putColeta", methods=["PUT"])
+def createVeiculo():
+  try:
+    data = request.get_json()
+    sql=f""" UPDATE registrocoleta SET  
+    dataColeta='{data['dataColeta']}', horaColeta='{data['horaColeta']}', estadoColeta='{data['estadoColeta']}', cidadeColeta='{data['cidadeColeta']}', 
+    bairroColeta='{data['bairroColeta']}', ruaColeta='{data['ruaColeta']}', numeroColeta='{data['numeroColeta']}', 
+    dataEntrega='{data['dataEntrega']}', horaEntrega='{data['horaEntrega']}', estadoEntrega='{data['estadoEntrega']}', cidadeEntrega='{data['cidadeEntrega']}', 
+    bairroEntrega='{data['bairroEntrega']}', ruaEntrega='{data['ruaEntrega']}', numeroEntrega='{data['numeroEntrega']}',
+    nomeCliente='{data['nomeCliente']}', cnpjCliente='{data['cnpjCliente']}', emailCliente='{data['emailCliente']}', telefoneCliente='{data['telefoneCliente']}', 
+    pesoCarga='{data['pesoCarga']}', volumeCarga='{data['volumeCarga']}', valorCarga='{data['valorCarga']}' WHERE id={data['id']}"""
+    mycursor = mydb.cursor().execute(sql)
+    return ("Veículo Editado com Sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
 
 @app.route("/update", methods=["PUT"])
 def update():

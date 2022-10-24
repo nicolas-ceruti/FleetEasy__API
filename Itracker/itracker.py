@@ -34,6 +34,7 @@ def getUsuarios():
     return (error_error())
 
 @app.route("/getMotoristas", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getMotoristas():
   try: 
     sql="SELECT * FROM motoristas"
@@ -69,6 +70,7 @@ def getColetas():
 #-----------------P O S T --------------------------------
 
 @app.route("/login", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def login():
   try:
     data = request.get_json() 
@@ -77,7 +79,7 @@ def login():
     mycursor.execute(sql)
     usuarios = mycursor.fetchall()
     if (usuarios) != nullcontext:
-      return (usuarios)
+      return ("ok")
     else:
       return ("ff")
   except Exception as ex:
@@ -185,7 +187,7 @@ def putCoordenadas():
 
 
 @app.route("/putVeiculo", methods=["PUT"])
-def createVeiculo():
+def putVeiculo():
   try:
     data = request.get_json()
     sql=f"UPDATE veiculo SET  "
@@ -199,7 +201,7 @@ def createVeiculo():
 
 
 @app.route("/putColeta", methods=["PUT"])
-def createVeiculo():
+def putColeta():
   try:
     data = request.get_json()
     sql=f""" UPDATE registrocoleta SET  
@@ -270,16 +272,6 @@ def create():
 
 
 
-@app.route("/update", methods=["PUT"])
-def update():
-  try:
-    data = request.get_json()
-    sql=f"UPDATE usuarios SET nome='{data['nome']}', email='{data['email']}', senha='{data['senha']}', profissao='{data['profissao']}' WHERE id={data['id']}"
-    mycursor = mydb.cursor().execute(sql)
-    return ("Usuário editado com sucesso!")
-  except Exception as ex:
-    data = request.get_json
-    return (error_error())
 
 
 

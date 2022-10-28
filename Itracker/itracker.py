@@ -41,7 +41,7 @@ def getMotoristas():
     sql="SELECT * FROM motoristas"
     mycursor = mydb.cursor()
     mycursor.execute(sql)
-    usuarios = mycursor.fetchall()
+    usuarios = jsonify(mycursor.fetchall())
     return (usuarios)
   except Exception as ex:
     return (error_error())

@@ -23,6 +23,7 @@ mydb = mysql.connector.connect(
 #-----------------G E T --------------------------------
 
 @app.route("/getUsuarios", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getUsuarios():
   try: 
     sql="SELECT * FROM usuario"
@@ -46,6 +47,7 @@ def getMotoristas():
     return (error_error())
 
 @app.route("/getVeiculos", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getVeiculos():
   try: 
     sql="SELECT * FROM veiculo"
@@ -57,6 +59,7 @@ def getVeiculos():
     return (error_error())
 
 @app.route("/getColetas", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getColetas():
   try: 
     sql="SELECT * FROM registrocoleta"
@@ -87,6 +90,7 @@ def login():
 
 
 @app.route("/createUsuario", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createUsuario():
   try:
     data = request.get_json()
@@ -100,6 +104,7 @@ def createUsuario():
 
 
 @app.route("/createMotorista", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createMotorista():
   try:
     data = request.get_json()
@@ -114,6 +119,7 @@ def createMotorista():
 
 
 @app.route("/createVeiculo", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createVeiculo():
   try:
     data = request.get_json()
@@ -127,6 +133,7 @@ def createVeiculo():
     return (error_error())
 
 @app.route("/createColeta", methods=["POST"])  #BAD
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createColeta():
   try:
     data = request.get_json()
@@ -147,6 +154,7 @@ def createColeta():
 #-----------------P U T --------------------------------
 
 @app.route("/putUsuario", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putUsuario():
   try:
     data = request.get_json()
@@ -160,6 +168,7 @@ def putUsuario():
 
 
 @app.route("/putMotorista", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putMotorista():
   try:
     data = request.get_json()
@@ -174,6 +183,7 @@ def putMotorista():
 
 
 @app.route("/putCoordenadas", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putCoordenadas():
   try:
     data = request.get_json()
@@ -187,6 +197,7 @@ def putCoordenadas():
 
 
 @app.route("/putVeiculo", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putVeiculo():
   try:
     data = request.get_json()
@@ -201,6 +212,7 @@ def putVeiculo():
 
 
 @app.route("/putColeta", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putColeta():
   try:
     data = request.get_json()
@@ -219,6 +231,7 @@ def putColeta():
 
 
 @app.route("/update", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def update():
   try:
     data = request.get_json()
@@ -234,6 +247,7 @@ def update():
 
 
 @app.route("/getOne/<id>", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def one(id):
   try:
     sql="SELECT * FROM usuarios WHERE id =" + id
@@ -247,6 +261,7 @@ def one(id):
 
 
 @app.route("/delete", methods=["DELETE"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def delete():
   try:
     data = request.get_json()
@@ -260,6 +275,7 @@ def delete():
 
 
 @app.route("/create", methods=["POST"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def create():
   try:
     data = request.get_json()

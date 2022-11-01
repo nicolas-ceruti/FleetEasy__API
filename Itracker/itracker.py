@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 mydb = mysql.connector.connect(
  host="localhost",
- port="3306",
+ port="3307",
  user="root",
  password="",
- database="mydb"
+ database="itracker"
 )
 
 #-----------------G E T --------------------------------
@@ -37,14 +37,31 @@ def getUsuarios():
 @app.route("/getMotoristas", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getMotoristas():
-  try: 
+ 
+    
     sql="SELECT * FROM motoristas"
     mycursor = mydb.cursor()
     mycursor.execute(sql)
-    usuarios = jsonify(mycursor.fetchall())
-    return (usuarios)
-  except Exception as ex:
-    return (error_error())
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      id = row[0]
+      usuarios_list = {
+        "idMotorista" : row[0],
+        "nomeCompleto" : row[1],
+        "senha" : row[2],
+        "email" : row[3],
+        "cpf" : row[4],
+        "rg" : row[5],
+        "telefone" : row[6],
+        "latitude" : row[7],
+        "longitude" : row[8],
+        "cnh" : row[9],
+      }
+      usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data)
+ 
 
 @app.route("/getVeiculos", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])

@@ -98,8 +98,8 @@ def login():
     mycursor = mydb.cursor()
     mycursor.execute(sql)
     usuarios = mycursor.fetchall()
-    if (usuarios) != nullcontext:
-      return ("ok")
+    if (usuarios) != '':
+      return (usuarios)
     else:
       return ("ff")
   except Exception as ex:

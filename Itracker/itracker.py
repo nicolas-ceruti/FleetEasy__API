@@ -11,6 +11,7 @@ import json
 
 
 app = Flask(__name__)
+CORS(app)
 
 mydb = mysql.connector.connect(
  host="localhost",
@@ -23,7 +24,7 @@ mydb = mysql.connector.connect(
 #-----------------G E T --------------------------------
 
 @app.route("/getUsuarios", methods=["GET"])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def getUsuarios():
   try: 
     sql="SELECT * FROM usuario"
@@ -82,17 +83,48 @@ def getColetas():
     sql="SELECT * FROM registrocoleta"
     mycursor = mydb.cursor()
     mycursor.execute(sql)
-    usuarios = mycursor.fetchall()
-    return (usuarios)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      id = row[0]
+      usuarios_list = {
+        "idRegistroColeta" : row[0],
+        "dataColeta" : row[1],
+        "horaColeta" : row[2],
+        "estadoColeta" : row[3],
+        "cidadeColeta" : row[4],
+        "bairroColeta" : row[5],
+        "ruaColeta" : row[6],
+        "numeroColeta" : row[7],
+        "dataEntrega" : row[8],
+        "horaEntrega" : row[9],
+        "estadoEntrega" : row[10],
+        "cidadeEntrega" : row[11],
+        "bairroEntrega" : row[12],
+        "ruaEntrega" : row[13],
+        "numeroEntrega" : row[14],
+        "nomeCliente" : row[15],
+        "cnpjCliente" : row[16],
+        "emailCliente" : row[17],
+        "telefoneCliente" : row[18],
+        "pesoCarga" : row[19],
+        "volumeCarga" : row[20],
+        "valorCarga" : row[21],
+        "Ocorrencia_idOcorrencia" : row[22],
+        "Motoristas_idMotorista" : row[23],
+    }
+    usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data)
   except Exception as ex:
     return (error_error())
 
 #-----------------P O S T --------------------------------
 
 @app.route("/login", methods=["POST"])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def login():
-  try:
+  # try:
     data = request.get_json() 
     sql=f"SELECT * FROM usuario WHERE email='{data['email']}' AND senha='{data['senha']}'"
     mycursor = mydb.cursor()
@@ -102,8 +134,8 @@ def login():
       return (usuarios)
     else:
       return ("ff")
-  except Exception as ex:
-    return (error_error())
+  # except Exception as ex:
+  #   return (error_error())
 
 
 @app.route("/createUsuario", methods=["POST"])
@@ -121,18 +153,18 @@ def createUsuario():
 
 
 @app.route("/createMotorista", methods=["POST"])
-@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+@cross_origin(origin='*',headers=['Authorization'])
 def createMotorista():
-  try:
-    data = request.get_json()
-    sql=f"INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES "
-    sql = sql + f"('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}'," 
-    sql = sql + f" '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')"
-    mycursor = mydb.cursor().execute(sql)
-    return ("Motorista Cadastrado com Sucesso!")
-  except Exception as ex:
-    data = request.get_json
-    return (error_error())
+ 
+  data = request.get_json()
+  sql=f"INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES "
+  sql = sql + f"('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}'," 
+  sql = sql + f" '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')"
+  mycursor = mydb.cursor().execute(sql)
+  return ("Motorista Cadastrado com Sucesso!")
+ 
+ 
+
 
 
 @app.route("/createVeiculo", methods=["POST"])
@@ -152,20 +184,20 @@ def createVeiculo():
 @app.route("/createColeta", methods=["POST"])  #BAD
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createColeta():
-  try:
-    data = request.get_json()
-    sql=f"INSERT INTO registrocoleta (dataColeta, horaColeta, estadoColeta, cidadeColeta, bairroColeta, ruaColeta, numeroColeta,"
-    sql= sql + f" dataEntrega, horaEntrega, estadoEntrega, cidadeEntrega, bairroEntrega, ruaEntrega, numeroEntrega,"
-    sql= sql + f" nomeCliente, cnpjCliente, emailCliente, telefoneCliente, pesoCarga, volumeCarga, valorCarga, Ocorrencia_idOcorrencia, Motoristas_idMotorista) VALUES "
-    sql = sql + f"('{data['dataColeta']}', '{data['horaColeta']}', '{data['estadoColeta']}', '{data['cidadeColeta']}', '{data['bairroColeta']}', '{data['ruaColeta']}', '{data['numeroColeta']}'," 
-    sql = sql + f" '{data['dataEntrega']}', '{data['horaEntrega']}', '{data['estadoEntrega']}', '{data['cidadeEntrega']}', '{data['bairroEntrega']}', '{data['ruaEntrega']}', '{data['numeroEntrega']}',"
-    sql = sql + f" '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',"
-    sql = sql + f" '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')"
-    mycursor = mydb.cursor().execute(sql)
-    return ("Coleta Cadastrado com Sucesso!")
-  except Exception as ex:
-    data = request.get_json
-    return (error_error())
+  # try:
+  data = request.get_json()
+  sql=f"INSERT INTO registrocoleta (dataColeta, horaColeta, estadoColeta, cidadeColeta, bairroColeta, ruaColeta, numeroColeta,"
+  sql= sql + f" dataEntrega, horaEntrega, estadoEntrega, cidadeEntrega, bairroEntrega, ruaEntrega, numeroEntrega,"
+  sql= sql + f" nomeCliente, cnpjCliente, emailCliente, telefoneCliente, pesoCarga, volumeCarga, valorCarga, Ocorrencia_idOcorrencia, Motoristas_idMotorista) VALUES "
+  sql = sql + f"('{data['dataColeta']}', '{data['horaColeta']}', '{data['estadoColeta']}', '{data['cidadeColeta']}', '{data['bairroColeta']}', '{data['ruaColeta']}', '{data['numeroColeta']}'," 
+  sql = sql + f" '{data['dataEntrega']}', '{data['horaEntrega']}', '{data['estadoEntrega']}', '{data['cidadeEntrega']}', '{data['bairroEntrega']}', '{data['ruaEntrega']}', '{data['numeroEntrega']}',"
+  sql = sql + f" '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',"
+  sql = sql + f" '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')"
+  mycursor = mydb.cursor().execute(sql)
+  return ("Coleta Cadastrado com Sucesso!")
+  # except Exception as ex:
+  #   data = request.get_json
+  #   return (error_error())
 
 
 #-----------------P U T --------------------------------

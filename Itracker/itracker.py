@@ -124,18 +124,21 @@ def getColetas():
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def login():
-  # try:
-    data = request.get_json() 
+  try:
+    print ("--------------------------------------------")
+    data = request.get_json(force=True) 
     sql=f"SELECT * FROM usuario WHERE email='{data['email']}' AND senha='{data['senha']}'"
+    print (data['senha'])
+    mydb.reconnect()
     mycursor = mydb.cursor()
     mycursor.execute(sql)
-    usuarios = mycursor.fetchall()
-    if (usuarios) != '':
-      return (usuarios)
+    dataMotoristas = mycursor.fetchall()
+    if (dataMotoristas):
+      return{"mensagem" : "Existe"}
     else:
-      return ("ff")
-  # except Exception as ex:
-  #   return (error_error())
+      return {"mensagem" : "Não Existe"}
+  except Exception as ex:
+    return (error_error())
 
 
 @app.route("/createUsuario", methods=["POST"])
@@ -155,13 +158,24 @@ def createUsuario():
 @app.route("/createMotorista", methods=["POST"])
 @cross_origin(origin='*',headers=['Authorization'])
 def createMotorista():
- 
-  data = request.get_json()
-  sql=f"INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES "
-  sql = sql + f"('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}'," 
-  sql = sql + f" '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')"
-  mycursor = mydb.cursor().execute(sql)
-  return ("Motorista Cadastrado com Sucesso!")
+
+  print ("--------------------------------------------")
+  data = request.get_json(force=True) 
+  sql=f"""
+    INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES 
+    ('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}',
+      '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')
+  """
+  mydb.reconnect()
+  mycursor = mydb.cursor()
+  try:
+    mycursor.execute(sql)
+    return{"mensagem" : "Cadastrado"}
+
+  except Exception as ex:
+    return {"mensagem" : error_error()}
+    
+
  
  
 
@@ -170,16 +184,24 @@ def createMotorista():
 @app.route("/createVeiculo", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createVeiculo():
+
+  print ("--------------------------------------------")
+  data = request.get_json(force=True) 
+  sql=f"""
+    INSERT INTO veiculo (placa, cor, ano, marca, tipo, modelo, chassi, capacidadePeso, capacidadeVolumetria) VALUES
+    ('{data['placa']}', '{data['cor']}', '{data['ano']}', '{data['marca']}', '{data['tipo']}',
+      '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}')
+  """
+  mydb.reconnect()
+  mycursor = mydb.cursor()
   try:
-    data = request.get_json()
-    sql=f"INSERT INTO veiculo (placa, cor, ano, marca, tipo, modelo, chassi, capacidadePeso, capacidadeVolumetria) VALUES "
-    sql = sql + f"('{data['placa']}', '{data['cor']}', '{data['ano']}', '{data['marca']}', '{data['tipo']}'," 
-    sql = sql + f" '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}')"
-    mycursor = mydb.cursor().execute(sql)
-    return ("Veículo Cadastrado com Sucesso!")
+    mycursor.execute(sql)
+    return{"mensagem" : "Cadastrado"}
+
   except Exception as ex:
-    data = request.get_json
-    return (error_error())
+    return {"mensagem" : error_error()}
+
+
 
 @app.route("/createColeta", methods=["POST"])  #BAD
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])

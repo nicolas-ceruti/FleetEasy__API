@@ -63,6 +63,32 @@ def getMotoristas():
    
     return (usuarios_data)
  
+@app.route("/motorista_profile/<id>", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def getMotoristas_by_id(id):
+
+    sql=f"SELECT * FROM motoristas WHERE idMotorista = {id}"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      usuarios_list = {
+        "idMotorista" : row[0],
+        "nomeCompleto" : row[1],
+        "senha" : row[2],
+        "email" : row[3],
+        "cpf" : row[4],
+        "rg" : row[5],
+        "telefone" : row[6],
+        "latitude" : row[7],
+        "longitude" : row[8],
+        "cnh" : row[9],
+      }
+      usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data)
+ 
 
 @app.route("/getVeiculos", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -190,7 +216,7 @@ def createVeiculo():
   sql=f"""
     INSERT INTO veiculo (placa, cor, ano, marca, tipo, modelo, chassi, capacidadePeso, capacidadeVolumetria) VALUES
     ('{data['placa']}', '{data['cor']}', '{data['ano']}', '{data['marca']}', '{data['tipo']}',
-      '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}');
+      '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}')
   """
   mydb.commit()
   mycursor = mydb.cursor()

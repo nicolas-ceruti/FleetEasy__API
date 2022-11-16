@@ -112,7 +112,6 @@ def getColetas():
     dataMotoristas = mycursor.fetchall()
     usuarios_data = []
     for row in dataMotoristas:
-      id = row[0]
       usuarios_list = {
         "idRegistroColeta" : row[0],
         "dataColeta" : row[1],
@@ -139,7 +138,7 @@ def getColetas():
         "Ocorrencia_idOcorrencia" : row[22],
         "Motoristas_idMotorista" : row[23],
     }
-    usuarios_data.append(usuarios_list)
+      usuarios_data.append(usuarios_list)
    
     return (usuarios_data)
   except Exception as ex:
@@ -181,7 +180,7 @@ def getColetas_by_id(id):
         "Ocorrencia_idOcorrencia" : row[22],
         "Motoristas_idMotorista" : row[23],
     }
-    usuarios_data.append(usuarios_list)
+      usuarios_data.append(usuarios_list)
     return (usuarios_data[0])
   except Exception as ex:
     return (error_error())

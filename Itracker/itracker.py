@@ -90,6 +90,24 @@ def getMotoristas_by_id(id):
     return (usuarios_data[0])
  
 
+@app.route("/motorista_location/<id>", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def getMotoristasLocation_by_id(id):
+
+    sql=f"SELECT latitude, longitude FROM motoristas WHERE idMotorista = {id}"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      usuarios_list = {
+        "latitude" : (row[0] if row[0] !=  "" else "-26.82541425863236"),
+        "longitude" : (row[1] if row[1] !=  "" else "-49.2724817183922")
+      }
+      usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data[0])
+
 @app.route("/getVeiculos", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getVeiculos():
@@ -184,6 +202,8 @@ def getColetas_by_id(id):
     return (usuarios_data[0])
   except Exception as ex:
     return (error_error())
+
+
 #-----------------P O S T --------------------------------
 
 @app.route("/login", methods=["POST"])
@@ -268,7 +288,7 @@ def createVeiculo():
 
 
 
-@app.route("/createColeta", methods=["POST"])  #BAD
+@app.route("/createColeta", methods=["POST"])  
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createColeta():
 

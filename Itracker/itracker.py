@@ -38,8 +38,6 @@ def getUsuarios():
 @app.route("/getMotoristas", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getMotoristas():
- 
-    
     sql="SELECT * FROM motoristas"
     mycursor = mydb.cursor()
     mycursor.execute(sql)
@@ -58,6 +56,25 @@ def getMotoristas():
         "latitude" : row[7],
         "longitude" : row[8],
         "cnh" : row[9],
+      }
+      usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data)
+
+
+@app.route("/getNameMotoristas", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def getNameMotoristas():
+    sql="SELECT idMotorista, nomeCompleto FROM motoristas"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      id = row[0]
+      usuarios_list = {
+        "idMotorista" : row[0],
+        "nomeCompleto" : row[1],
       }
       usuarios_data.append(usuarios_list)
    
@@ -104,9 +121,9 @@ def getMotoristasLocation_by_id(id):
         "latitude" : (row[0] if row[0] !=  "" else "-26.82541425863236"),
         "longitude" : (row[1] if row[1] !=  "" else "-49.2724817183922")
       }
-      usuarios_data.append(usuarios_list)
+    usuarios_data.append(usuarios_list)
    
-    return (usuarios_data[0])
+    return (usuarios_list)
 
 @app.route("/getVeiculos", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -200,6 +217,49 @@ def getColetas_by_id(id):
     }
       usuarios_data.append(usuarios_list)
     return (usuarios_data[0])
+  except Exception as ex:
+    return (error_error())
+
+
+@app.route("/getColetas_idMotorista/<id>", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def getColetas_idMotorista(id):
+  try: 
+    sql=f"SELECT * FROM registrocoleta WHERE Motoristas_idMotorista = {id}"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      usuarios_list = {
+        "idRegistroColeta" : row[0],
+        "dataColeta" : row[1],
+        "horaColeta" : row[2],
+        "estadoColeta" : row[3],
+        "cidadeColeta" : row[4],
+        "bairroColeta" : row[5],
+        "ruaColeta" : row[6],
+        "numeroColeta" : row[7],
+        "dataEntrega" : row[8],
+        "horaEntrega" : row[9],
+        "estadoEntrega" : row[10],
+        "cidadeEntrega" : row[11],
+        "bairroEntrega" : row[12],
+        "ruaEntrega" : row[13],
+        "numeroEntrega" : row[14],
+        "nomeCliente" : row[15],
+        "cnpjCliente" : row[16],
+        "emailCliente" : row[17],
+        "telefoneCliente" : row[18],
+        "pesoCarga" : row[19],
+        "volumeCarga" : row[20],
+        "valorCarga" : row[21],
+        "Ocorrencia_idOcorrencia" : row[22],
+        "Motoristas_idMotorista" : row[23],
+    }
+      usuarios_data.append(usuarios_list)
+   
+    return (usuarios_data)
   except Exception as ex:
     return (error_error())
 

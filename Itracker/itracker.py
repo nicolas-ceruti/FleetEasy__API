@@ -487,10 +487,12 @@ def one(id):
 def delete():
   try:
     data = request.get_json()
-    sql=f"DELETE FROM usuarios WHERE id ={data['id']}"
+    sql=f"DELETE FROM registrocoleta WHERE idRegistroColeta={data['id']};"
     mycursor = mydb.cursor()
+    print (data['id'])
     mycursor.execute(sql)
-    return ("Usuário Deletado com sucesso!")
+    mydb.commit()
+    return {"mensagem" : "Deletada"}
   except Exception as ex:
     return (error_error()) 
 

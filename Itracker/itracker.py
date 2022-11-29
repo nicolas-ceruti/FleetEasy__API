@@ -6,7 +6,7 @@ from flask_mysqldb import MySQL
 from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
 from flask_cors import CORS, cross_origin
-from flask_swagger_ui import get_swaggerui_blueprint
+# from flask_swagger_ui import get_swaggerui_blueprint
 import json
 
 
@@ -182,8 +182,12 @@ def getColetas():
 @app.route("/collect_profile/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getColetas_by_id(id):
-  try: 
-    sql=f"SELECT * FROM registrocoleta WHERE idRegistroColeta = {id}"
+  # try: 
+    sql=f"""SELECT A.idRegistroColeta, A.dataColeta, A.horaColeta, A.estadoColeta, A.cidadeColeta, A.bairroColeta, A.ruaColeta, A.numeroColeta,
+            A.dataEntrega, A.horaEntrega, A.estadoEntrega, A.cidadeEntrega, A.bairroEntrega, A.ruaEntrega, A.numeroEntrega,
+            A.nomeCliente, A.cnpjCliente, A.emailCliente, A.telefoneCliente, A.pesoCarga, A.volumeCarga, A.valorCarga, A.Ocorrencia_idOcorrencia, B.nomeCompleto
+            FROM registrocoleta AS A
+            LEFT JOIN motoristas AS B ON A.Motoristas_idMotorista = B.idMotorista WHERE idRegistroColeta = {id}"""
     mycursor = mydb.cursor()
     mycursor.execute(sql)
     dataMotoristas = mycursor.fetchall()
@@ -213,12 +217,12 @@ def getColetas_by_id(id):
         "volumeCarga" : row[20],
         "valorCarga" : row[21],
         "Ocorrencia_idOcorrencia" : row[22],
-        "Motoristas_idMotorista" : row[23],
+        "motorista" : row[23],
     }
       usuarios_data.append(usuarios_list)
     return (usuarios_data[0])
-  except Exception as ex:
-    return (error_error())
+  # except Exception as ex:
+  #   return (error_error())
 
 
 @app.route("/getColetas_idMotorista/<id>", methods=["GET"])
@@ -365,12 +369,12 @@ def createColeta():
   """
   mydb.commit()
   mycursor = mydb.cursor()
-  try:
-    mycursor.execute(sql)
-    return{"mensagem" : "Cadastrado"}
+  
+  mycursor.execute(sql)
+  return{"mensagem" : "Cadastrado"}
 
-  except Exception as ex:
-    return {"mensagem" : error_error()}
+
+ 
 
 
 #-----------------P U T --------------------------------
@@ -520,20 +524,20 @@ def error_error():
 
 
 
-@app.route("/static/<path:path>")  #Documentação OPENAPI/Swagger
-def send_static(path):
-  return send_from_directory('static', path)
+# @app.route("/static/<path:path>")  #Documentação OPENAPI/Swagger
+# def send_static(path):
+#   return send_from_directory('static', path)
 
-SWAGGER_URL = '/swagger'
-API_URL = '/static/swagger.yaml'
-swaggerui_blueprint = get_swaggerui_blueprint(
-  SWAGGER_URL,
-  API_URL,
-  config={
-    'app_name' : 'API'
-  }
-)
-app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+# SWAGGER_URL = '/swagger'
+# API_URL = '/static/swagger.yaml'
+# swaggerui_blueprint = get_swaggerui_blueprint(
+#   SWAGGER_URL,
+#   API_URL,
+#   config={
+#     'app_name' : 'API'
+#   }
+# )
+# app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 if __name__ == '__main__':

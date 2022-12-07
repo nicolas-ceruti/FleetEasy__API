@@ -308,22 +308,24 @@ def createUsuario():
 @cross_origin(origin='*',headers=['Authorization'])
 def createMotorista():
 
-  print ("--------------------------------------------")
   data = request.get_json(force=True) 
-  sql=f"""
-    INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES 
-    ('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}',
-      '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')
-  """
-  mydb.commit()
-  mycursor = mydb.cursor()
-  try:
-    mycursor.execute(sql)
-    return{"mensagem" : "Cadastrado"}
+  if (data['nomeCompleto'] != ""):
+    sql=f"""
+      INSERT INTO motoristas (nomeCompleto, senha, email, cpf, rg, telefone, latitude, longitude, cnh) VALUES 
+      ('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}',
+        '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')
+    """
+    mydb.commit()
+    mycursor = mydb.cursor()
+    try:
+      mycursor.execute(sql)
+      return{"mensagem" : "Cadastrado"}
 
-  except Exception as ex:
+    except Exception as ex:
+      return {"mensagem" : error_error()}
+  else:
     return {"mensagem" : error_error()}
-    
+      
 
  
  
@@ -358,23 +360,26 @@ def createColeta():
 
   print ("--------------------------------------------")
   data = request.get_json(force=True) 
-  sql=f"""
-    INSERT INTO registrocoleta (dataColeta, horaColeta, estadoColeta, cidadeColeta, bairroColeta, ruaColeta, numeroColeta,
-    dataEntrega, horaEntrega, estadoEntrega, cidadeEntrega, bairroEntrega, ruaEntrega, numeroEntrega,
-    nomeCliente, cnpjCliente, emailCliente, telefoneCliente, pesoCarga, volumeCarga, valorCarga, Ocorrencia_idOcorrencia, Motoristas_idMotorista) VALUES
-    ('{data['dataColeta']}', '{data['horaColeta']}', '{data['estadoColeta']}', '{data['cidadeColeta']}', '{data['bairroColeta']}', '{data['ruaColeta']}', '{data['numeroColeta']}',
-    '{data['dataEntrega']}', '{data['horaEntrega']}', '{data['estadoEntrega']}', '{data['cidadeEntrega']}', '{data['bairroEntrega']}', '{data['ruaEntrega']}', '{data['numeroEntrega']}',
-    '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',
-    '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')
-  """
-  mydb.commit()
-  mycursor = mydb.cursor()
-  
-  mycursor.execute(sql)
-  return{"mensagem" : "Cadastrado"}
-
+  if (data['dataColeta'] != ""):
+    sql=f"""
+      INSERT INTO registrocoleta (dataColeta, horaColeta, estadoColeta, cidadeColeta, bairroColeta, ruaColeta, numeroColeta,
+      dataEntrega, horaEntrega, estadoEntrega, cidadeEntrega, bairroEntrega, ruaEntrega, numeroEntrega,
+      nomeCliente, cnpjCliente, emailCliente, telefoneCliente, pesoCarga, volumeCarga, valorCarga, Ocorrencia_idOcorrencia, Motoristas_idMotorista) VALUES
+      ('{data['dataColeta']}', '{data['horaColeta']}', '{data['estadoColeta']}', '{data['cidadeColeta']}', '{data['bairroColeta']}', '{data['ruaColeta']}', '{data['numeroColeta']}',
+      '{data['dataEntrega']}', '{data['horaEntrega']}', '{data['estadoEntrega']}', '{data['cidadeEntrega']}', '{data['bairroEntrega']}', '{data['ruaEntrega']}', '{data['numeroEntrega']}',
+      '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',
+      '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')
+    """
+    mydb.commit()
+    mycursor = mydb.cursor()
+    
+    mycursor.execute(sql)
+    return{"mensagem" : "Cadastrado"}
+  else:
+    return {"mensagem" : error_error()}
 
  
+
 
 
 #-----------------P U T --------------------------------

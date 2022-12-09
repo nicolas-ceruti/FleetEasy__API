@@ -315,10 +315,10 @@ def createMotorista():
       ('{data['nomeCompleto']}', '{data['senha']}', '{data['email']}', '{data['cpf']}', '{data['rg']}',
         '{data['telefone']}', '{data['latitude']}', '{data['longitude']}', '{data['cnh']}')
     """
-    mydb.commit()
     mycursor = mydb.cursor()
     try:
       mycursor.execute(sql)
+      mydb.commit()
       return{"mensagem" : "Cadastrado"}
 
     except Exception as ex:
@@ -343,10 +343,11 @@ def createVeiculo():
     ('{data['placa']}', '{data['cor']}', '{data['ano']}', '{data['marca']}', '{data['tipo']}',
       '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}')
   """
-  mydb.commit()
+  
   mycursor = mydb.cursor()
   try:
     mycursor.execute(sql)
+    mydb.commit()
     return{"mensagem" : "Cadastrado"}
 
   except Exception as ex:
@@ -370,10 +371,11 @@ def createColeta():
       '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',
       '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')
     """
-    mydb.commit()
+    
     mycursor = mydb.cursor()
     
     mycursor.execute(sql)
+    mydb.commit()
     return{"mensagem" : "Cadastrado"}
   else:
     return {"mensagem" : error_error()}

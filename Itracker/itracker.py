@@ -118,8 +118,8 @@ def getMotoristasLocation_by_id(id):
     usuarios_data = []
     for row in dataMotoristas:
       usuarios_list = {
-        "latitude" : (row[0] if row[0] !=  "" else "-26.82541425863236"),
-        "longitude" : (row[1] if row[1] !=  "" else "-49.2724817183922")
+        "latitude" : (row[0] if row[0] !=  "" else "-15.799478338720315"),
+        "longitude" : (row[1] if row[1] !=  "" else "-47.90712209393048")
       }
     usuarios_data.append(usuarios_list)
    
@@ -493,14 +493,14 @@ def one(id):
 
 
 
-@app.route("/delete", methods=["DELETE"])
+@app.route("/delete/<id>", methods=["DELETE"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
-def delete():
+def delete(id):
   try:
-    data = request.get_json()
-    sql=f"DELETE FROM registrocoleta WHERE idRegistroColeta={data['id']};"
+    
+    sql=f"DELETE FROM registrocoleta WHERE idRegistroColeta={id};"
     mycursor = mydb.cursor()
-    print (data['id'])
+    
     mycursor.execute(sql)
     mydb.commit()
     return {"mensagem" : "Deletada"}
@@ -523,12 +523,112 @@ def create():
 
 
 
-
-
-
 def error_error():       
     return jsonify({"mensagem": "Não foi possível concluir a ação!"})
 
+
+# #--------------ANDROID------------------------
+
+#Atualizar localização
+@app.route("/updateAndroid", methods=["PUT"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
+def updateAndroid():
+  try:
+    data = request.get_json()
+    sql=f"UPDATE motoristas SET latitude='{data['latitude']}', longitude='{data['longitude']}' WHERE idMotorista={data['id']}"
+    mycursor = mydb.cursor().execute(sql)
+    mydb.commit()
+    return ("Localização atualizada com sucesso!")
+  except Exception as ex:
+    data = request.get_json
+    return (error_error())
+
+#Método Get 
+@app.route("/getAndroid", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
+def getAndroid():
+  try: 
+    sql="SELECT * FROM motoristas"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    usuarios = mycursor.fetchall()
+    return (usuarios)
+  except Exception as ex:
+    return (error_error())
+
+#Método Post login
+@app.route('/loginAndroid', methods=['POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
+def loginAndroid():
+  try:
+    data = request.get_json(force=True) 
+    sql=f"SELECT * FROM motoristas WHERE email='{data['email']}' AND senha='{data['senha']}'"
+    # print (data['senha'])
+    mydb.reconnect()
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    usuarios_data= []
+    response_login = mycursor.fetchall()
+    for row in response_login:
+        x = row[0]      
+    if (response_login):
+      return str(x)
+    else:
+      return str("erro")
+  except Exception as ex:
+    return (ex)
+
+#Get coletas
+@app.route("/getColetasAndroid/<id>", methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
+def getColetasAndroid(id):
+  try: 
+    print(id)
+    sql=f"SELECT * FROM registrocoleta WHERE Motoristas_idMotorista = {id}"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    dataMotoristas = mycursor.fetchall()
+    usuarios_data = []
+    for row in dataMotoristas:
+      usuarios_list = {
+        "idRegistroColeta" : row[0],
+        "dataColeta" : row[1],
+        "horaColeta" : row[2],
+        "estadoColeta" : row[3],
+        "cidadeColeta" : row[4],
+        "bairroColeta" : row[5],
+        "ruaColeta" : row[6],
+        "numeroColeta" : row[7],
+        "dataEntrega" : row[8],
+        "horaEntrega" : row[9],
+        "estadoEntrega" : row[10],
+        "cidadeEntrega" : row[11],
+        "bairroEntrega" : row[12],
+        "ruaEntrega" : row[13],
+        "numeroEntrega" : row[14],
+        "nomeCliente" : row[15],
+        "cnpjCliente" : row[16],
+        "emailCliente" : row[17],
+        "telefoneCliente" : row[18],
+        "pesoCarga" : row[19],
+        "volumeCarga" : row[20],
+        "valorCarga" : row[21],
+        "Ocorrencia_idOcorrencia" : row[22],
+        "Motoristas_idMotorista" : row[23],
+    }
+      usuarios_data.append(usuarios_list)
+    dataReturn = usuarios_data[0]
+    return (
+      "Coleta --------------" + "\n" +
+      dataReturn['dataColeta'] + "  " + dataReturn['horaColeta'] + "\n" +
+      dataReturn['estadoColeta'] + ", " + dataReturn['cidadeColeta'] + "\n" + 
+      dataReturn['bairroColeta'] + ", " + dataReturn['ruaColeta'] + ", " + dataReturn['numeroColeta'] +  "\n" + 
+      "Entrega --------------" + "\n" +
+      dataReturn['dataEntrega'] + "  " + dataReturn['horaEntrega'] + "\n" +
+      dataReturn['estadoEntrega'] + ", " + dataReturn['cidadeEntrega'] + "\n" + 
+      dataReturn['bairroEntrega'] + ", " + dataReturn['ruaEntrega'] + ", " + dataReturn['numeroEntrega'] +  "\n")
+  except Exception as ex:
+    return str("Não existem coletas para você")
 
 
 # @app.route("/static/<path:path>")  #Documentação OPENAPI/Swagger

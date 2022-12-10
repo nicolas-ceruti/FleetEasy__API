@@ -619,11 +619,11 @@ def getColetasAndroid(id):
       usuarios_data.append(usuarios_list)
     dataReturn = usuarios_data[0]
     return (
-      "Coleta --------------" + "\n" +
+      "---------- Coleta ----------" + "\n" +
       dataReturn['dataColeta'] + "  " + dataReturn['horaColeta'] + "\n" +
       dataReturn['estadoColeta'] + ", " + dataReturn['cidadeColeta'] + "\n" + 
       dataReturn['bairroColeta'] + ", " + dataReturn['ruaColeta'] + ", " + dataReturn['numeroColeta'] +  "\n" + 
-      "Entrega --------------" + "\n" +
+      "---------- Entrega ----------" + "\n" +
       dataReturn['dataEntrega'] + "  " + dataReturn['horaEntrega'] + "\n" +
       dataReturn['estadoEntrega'] + ", " + dataReturn['cidadeEntrega'] + "\n" + 
       dataReturn['bairroEntrega'] + ", " + dataReturn['ruaEntrega'] + ", " + dataReturn['numeroEntrega'] +  "\n")

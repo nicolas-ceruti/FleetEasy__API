@@ -1,14 +1,7 @@
-from contextlib import nullcontext
-from urllib import response
 import mysql.connector
 from flask import Flask
-from flask_mysqldb import MySQL
 from flask import Flask, jsonify, request
-from flask_mysqldb import MySQL
 from flask_cors import CORS, cross_origin
-# from flask_swagger_ui import get_swaggerui_blueprint
-import json
-
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +14,6 @@ mydb = mysql.connector.connect(
  database="itrackerr"
 )
 
-#-----------------G E T --------------------------------
 
 @app.route("/getUsuarios", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
@@ -58,7 +50,6 @@ def getMotoristas():
         "cnh" : row[9],
       }
       usuarios_data.append(usuarios_list)
-   
     return (usuarios_data)
 
 
@@ -77,7 +68,6 @@ def getNameMotoristas():
         "nomeCompleto" : row[1],
       }
       usuarios_data.append(usuarios_list)
-   
     return (usuarios_data)
  
 @app.route("/motorista_profile/<id>", methods=["GET"])
@@ -103,14 +93,12 @@ def getMotoristas_by_id(id):
         "cnh" : row[9],
       }
       usuarios_data.append(usuarios_list)
-   
     return (usuarios_data[0])
  
 
 @app.route("/motorista_location/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getMotoristasLocation_by_id(id):
-
     sql=f"SELECT latitude, longitude FROM motoristas WHERE idMotorista = {id}"
     mycursor = mydb.cursor()
     mycursor.execute(sql)
@@ -121,8 +109,7 @@ def getMotoristasLocation_by_id(id):
         "latitude" : (row[0] if row[0] !=  "" else "-15.799478338720315"),
         "longitude" : (row[1] if row[1] !=  "" else "-47.90712209393048")
       }
-    usuarios_data.append(usuarios_list)
-   
+    usuarios_data.append(usuarios_list) 
     return (usuarios_list)
 
 @app.route("/getVeiculos", methods=["GET"])
@@ -174,7 +161,6 @@ def getColetas():
         "Motoristas_idMotorista" : row[23],
     }
       usuarios_data.append(usuarios_list)
-   
     return (usuarios_data)
   except Exception as ex:
     return (error_error())
@@ -182,7 +168,6 @@ def getColetas():
 @app.route("/collect_profile/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getColetas_by_id(id):
-  # try: 
     sql=f"""SELECT A.idRegistroColeta, A.dataColeta, A.horaColeta, A.estadoColeta, A.cidadeColeta, A.bairroColeta, A.ruaColeta, A.numeroColeta,
             A.dataEntrega, A.horaEntrega, A.estadoEntrega, A.cidadeEntrega, A.bairroEntrega, A.ruaEntrega, A.numeroEntrega,
             A.nomeCliente, A.cnpjCliente, A.emailCliente, A.telefoneCliente, A.pesoCarga, A.volumeCarga, A.valorCarga, A.Ocorrencia_idOcorrencia, B.nomeCompleto
@@ -221,9 +206,6 @@ def getColetas_by_id(id):
     }
       usuarios_data.append(usuarios_list)
     return (usuarios_data[0])
-  # except Exception as ex:
-  #   return (error_error())
-
 
 @app.route("/getColetas_idMotorista/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -262,13 +244,9 @@ def getColetas_idMotorista(id):
         "Motoristas_idMotorista" : row[23],
     }
       usuarios_data.append(usuarios_list)
-   
     return (usuarios_data)
   except Exception as ex:
     return (error_error())
-
-
-#-----------------P O S T --------------------------------
 
 @app.route("/login", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
@@ -289,7 +267,6 @@ def login():
   except Exception as ex:
     return (error_error())
 
-
 @app.route("/createUsuario", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createUsuario():
@@ -303,11 +280,9 @@ def createUsuario():
     data = request.get_json
     return (error_error())
 
-
 @app.route("/createMotorista", methods=["POST"])
 @cross_origin(origin='*',headers=['Authorization'])
 def createMotorista():
-
   data = request.get_json(force=True) 
   if (data['nomeCompleto'] != ""):
     sql=f"""
@@ -320,46 +295,31 @@ def createMotorista():
       mycursor.execute(sql)
       mydb.commit()
       return{"mensagem" : "Cadastrado"}
-
     except Exception as ex:
       return {"mensagem" : error_error()}
   else:
     return {"mensagem" : error_error()}
-      
-
- 
- 
-
-
 
 @app.route("/createVeiculo", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createVeiculo():
-
-  print ("--------------------------------------------")
   data = request.get_json(force=True) 
   sql=f"""
     INSERT INTO veiculo (placa, cor, ano, marca, tipo, modelo, chassi, capacidadePeso, capacidadeVolumetria) VALUES
     ('{data['placa']}', '{data['cor']}', '{data['ano']}', '{data['marca']}', '{data['tipo']}',
       '{data['modelo']}', '{data['chassi']}', '{data['capacidadePeso']}', '{data['capacidadeVolumetria']}')
   """
-  
   mycursor = mydb.cursor()
   try:
     mycursor.execute(sql)
     mydb.commit()
     return{"mensagem" : "Cadastrado"}
-
   except Exception as ex:
     return {"mensagem" : error_error()}
-
-
 
 @app.route("/createColeta", methods=["POST"])  
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def createColeta():
-
-  print ("--------------------------------------------")
   data = request.get_json(force=True) 
   if (data['dataColeta'] != ""):
     sql=f"""
@@ -371,20 +331,12 @@ def createColeta():
       '{data['nomeCliente']}', '{data['cnpjCliente']}', '{data['emailCliente']}', '{data['telefoneCliente']}', '{data['pesoCarga']}', '{data['volumeCarga']}', '{data['valorCarga']}',
       '{data['Ocorrencia_idOcorrencia']}', '{data['Motoristas_idMotorista']}')
     """
-    
     mycursor = mydb.cursor()
-    
     mycursor.execute(sql)
     mydb.commit()
     return{"mensagem" : "Cadastrado"}
   else:
     return {"mensagem" : error_error()}
-
- 
-
-
-
-#-----------------P U T --------------------------------
 
 @app.route("/putUsuario", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -398,7 +350,6 @@ def putUsuario():
   except Exception as ex:
     data = request.get_json
     return (error_error())
-
 
 @app.route("/putMotorista", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -414,7 +365,6 @@ def putMotorista():
     data = request.get_json
     return (error_error())
 
-
 @app.route("/putCoordenadas", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def putCoordenadas():
@@ -427,7 +377,6 @@ def putCoordenadas():
   except Exception as ex:
     data = request.get_json
     return (error_error())
-
 
 @app.route("/putVeiculo", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -442,7 +391,6 @@ def putVeiculo():
   except Exception as ex:
     data = request.get_json
     return (error_error())
-
 
 @app.route("/putColeta", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -462,7 +410,6 @@ def putColeta():
     data = request.get_json
     return (error_error())
 
-
 @app.route("/update", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def update():
@@ -474,10 +421,6 @@ def update():
   except Exception as ex:
     data = request.get_json
     return (error_error())
-
-
-
-
 
 @app.route("/getOne/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -491,23 +434,17 @@ def one(id):
   except Exception as ex:
     return (error_error())
 
-
-
 @app.route("/delete/<id>", methods=["DELETE"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def delete(id):
   try:
-    
     sql=f"DELETE FROM registrocoleta WHERE idRegistroColeta={id};"
     mycursor = mydb.cursor()
-    
     mycursor.execute(sql)
     mydb.commit()
     return {"mensagem" : "Deletada"}
   except Exception as ex:
     return (error_error()) 
-
-
 
 @app.route("/create", methods=["POST"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
@@ -521,15 +458,6 @@ def create():
     data = request.get_json
     return (error_error())
 
-
-
-def error_error():       
-    return jsonify({"mensagem": "Não foi possível concluir a ação!"})
-
-
-# #--------------ANDROID------------------------
-
-#Atualizar localização
 @app.route("/updateAndroid", methods=["PUT"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def updateAndroid():
@@ -543,7 +471,6 @@ def updateAndroid():
     data = request.get_json
     return (error_error())
 
-#Método Get 
 @app.route("/getAndroid", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def getAndroid():
@@ -556,18 +483,15 @@ def getAndroid():
   except Exception as ex:
     return (error_error())
 
-#Método Post login
 @app.route('/loginAndroid', methods=['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization', 'Access-Control-Allow-Origin'])
 def loginAndroid():
   try:
     data = request.get_json(force=True) 
     sql=f"SELECT * FROM motoristas WHERE email='{data['email']}' AND senha='{data['senha']}'"
-    # print (data['senha'])
     mydb.reconnect()
     mycursor = mydb.cursor()
     mycursor.execute(sql)
-    usuarios_data= []
     response_login = mycursor.fetchall()
     for row in response_login:
         x = row[0]      
@@ -578,7 +502,6 @@ def loginAndroid():
   except Exception as ex:
     return (ex)
 
-#Get coletas
 @app.route("/getColetasAndroid/<id>", methods=["GET"])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getColetasAndroid(id):
@@ -646,6 +569,8 @@ def getColetasAndroid(id):
 # )
 # app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
+def error_error():       
+    return jsonify({"mensagem": "Não foi possível concluir a ação!"})
 
 if __name__ == '__main__':
     app.run(DEBUG=True)

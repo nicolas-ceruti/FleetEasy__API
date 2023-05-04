@@ -1,3 +1,3 @@
 # ItrackerAPI
 
-API from repository "React"
+API from repository "FleetEasy"
